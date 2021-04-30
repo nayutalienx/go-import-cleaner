@@ -1,5 +1,9 @@
 # go-import-cleaner
 
+```
+go get github.com/nayutalienx/go-import-cleaner
+```
+
 This utility cleans aliases in imports. The result is written to the passed file.
 
 # example
