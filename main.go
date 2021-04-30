@@ -98,7 +98,7 @@ func exitWithMessage(message string, a ...interface{}) {
 	} else {
 		fmt.Println(message, a)
 	}
-	os.Exit(1)
+	os.Exit(0)
 }
 
 func getCodeFromFile(argument string) string {
