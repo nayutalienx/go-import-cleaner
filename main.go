@@ -10,14 +10,18 @@ import (
 
 func main() {
 
-	if len(os.Args) != 2 {
+	if len(os.Args) == 1 {
+		help()
+	}
+
+	if len(os.Args) > 2 {
 		exitWithMessage("only 1 argument allowed")
 	}
 
 	argument := os.Args[1]
 
 	if argument == "help" || argument == "-help" || argument == "--help" {
-		exitWithMessage("go-import-cleaner path-to-go-file \nexample: go-import-cleaner main.go")
+		help()
 	}
 
 	if !strings.Contains(argument, ".go") {
@@ -69,6 +73,10 @@ func main() {
 		exitWithMessage("error when close result file: ", err)
 	}
 
+}
+
+func help() {
+	exitWithMessage("go-import-cleaner path-to-go-file \nexample: go-import-cleaner main.go")
 }
 
 func exitWithMessage(message string, a ...interface{}) {
