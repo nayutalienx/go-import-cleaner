@@ -29,6 +29,10 @@ func validateArgument(argument string) {
 }
 
 func processImports(code string) string {
+	if !strings.Contains(code, "import") {
+		exitWithMessage("file does not have imports")
+	}
+
 	if strings.Contains(code, "import \"") {
 		exitWithMessage("skipping file with single import without aliases")
 	}
