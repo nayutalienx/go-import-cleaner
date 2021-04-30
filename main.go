@@ -37,6 +37,10 @@ func main() {
 
 	beforeImportKeyword := strings.Split(code, "import")
 
+	if len(beforeImportKeyword) == 1 {
+		exitWithMessage("there is nothing to clean")
+	}
+
 	importsOpenBrace := strings.Split(beforeImportKeyword[1], "(")
 	importsCloseBrace := strings.Split(importsOpenBrace[1], ")")
 
