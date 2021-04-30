@@ -9,34 +9,53 @@ import (
 )
 
 func main() {
-
-	if len(os.Args) == 1 {
+	if len(os.Args) == 1 || len(os.Args) > 2 {
 		help()
 	}
-
-	if len(os.Args) > 2 {
-		exitWithMessage("only 1 argument allowed")
-	}
-
 	argument := os.Args[1]
-
 	if argument == "help" || argument == "-help" || argument == "--help" {
 		help()
 	}
+	validateArgument(argument)
+	code := getCodeFromFile(argument)
+	processedCode := processImports(code)
+	saveResultToFile(processedCode, argument)
+}
 
+func validateArgument(argument string) {
 	if !strings.Contains(argument, ".go") {
 		exitWithMessage("ERROR! only .go files allowed. \ntype go-import-cleaner help")
 	}
+}
 
-	file, err := ioutil.ReadFile(argument)
-	if err != nil {
-		exitWithMessage("Read file error: ", err)
+func processImports(code string) string {
+	if strings.Contains(code, "import \"") {
+		exitWithMessage("skipping file with single import without aliases")
 	}
 
-	code := string(file)
+	if strings.Contains(code, "import (") || strings.Contains(code, "import(") {
+		return processBracedImports(code)
+	} else {
+		return processSingleAliaseImport(code)
+	}
+}
 
+func processSingleAliaseImport(code string) string {
+	scanner := bufio.NewScanner(strings.NewReader(code))
+	for scanner.Scan() {
+		codeLine := scanner.Text()
+		if strings.Contains(codeLine, "package") {
+			splitedLine := strings.Split(codeLine, " ")
+			processedLine := splitedLine[0] + " " + splitedLine[2]
+			return strings.Replace(code, codeLine, processedLine, 1)
+		}
+	}
+	exitWithMessage("failed processing single aliase import")
+	return ""
+}
+
+func processBracedImports(code string) string {
 	beforeImportKeyword := strings.Split(code, "import")
-
 	if len(beforeImportKeyword) == 1 {
 		exitWithMessage("there is nothing to clean")
 	}
@@ -62,21 +81,7 @@ func main() {
 		}
 	}
 
-	processedCode := strings.Replace(code, allImports, processedImports+"\n", 1)
-
-	processedFile, err := os.Create(argument)
-	if err != nil {
-		panic(err)
-	}
-	_, err = processedFile.WriteString(processedCode)
-	if err != nil {
-		exitWithMessage("error when write result to file: ", err)
-	}
-	err = processedFile.Close()
-	if err != nil {
-		exitWithMessage("error when close result file: ", err)
-	}
-
+	return strings.Replace(code, allImports, processedImports+"\n", 1)
 }
 
 func help() {
@@ -90,4 +95,28 @@ func exitWithMessage(message string, a ...interface{}) {
 		fmt.Println(message, a)
 	}
 	os.Exit(1)
+}
+
+func getCodeFromFile(argument string) string {
+	file, err := ioutil.ReadFile(argument)
+	if err != nil {
+		exitWithMessage("Read file error: ", err)
+	}
+
+	return string(file)
+}
+
+func saveResultToFile(code string, argument string) {
+	processedFile, err := os.Create(argument)
+	if err != nil {
+		panic(err)
+	}
+	_, err = processedFile.WriteString(code)
+	if err != nil {
+		exitWithMessage("error when write result to file: ", err)
+	}
+	err = processedFile.Close()
+	if err != nil {
+		exitWithMessage("error when close result file: ", err)
+	}
 }
