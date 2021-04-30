@@ -44,7 +44,7 @@ func processSingleAliaseImport(code string) string {
 	scanner := bufio.NewScanner(strings.NewReader(code))
 	for scanner.Scan() {
 		codeLine := scanner.Text()
-		if strings.Contains(codeLine, "package") {
+		if strings.Contains(codeLine, "import") {
 			splitedLine := strings.Split(codeLine, " ")
 			processedLine := splitedLine[0] + " " + splitedLine[2]
 			return strings.Replace(code, codeLine, processedLine, 1)
