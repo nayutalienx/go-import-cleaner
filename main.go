@@ -79,7 +79,7 @@ func processBracedImports(code string) string {
 		}
 		importLineSplitted := strings.Split(importLine, " ")
 		if len(importLineSplitted) == 2 {
-			processedImports += "\n        " + importLineSplitted[1]
+			processedImports += "\n" + strings.Replace(importLine, strings.TrimSpace(importLineSplitted[0])+" ", "", 1)
 		} else {
 			processedImports += "\n" + importLineSplitted[0]
 		}
