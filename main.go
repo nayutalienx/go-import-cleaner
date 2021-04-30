@@ -17,11 +17,11 @@ func main() {
 	argument := os.Args[1]
 
 	if argument == "help" || argument == "-help" || argument == "--help" {
-		exitWithMessage("go-import-cleaner path-to-go-file \nexample: ./go-import-cleaner main.go")
+		exitWithMessage("go-import-cleaner path-to-go-file \nexample: go-import-cleaner main.go")
 	}
 
 	if !strings.Contains(argument, ".go") {
-		exitWithMessage("ERROR! only .go files allowed")
+		exitWithMessage("ERROR! only .go files allowed. \ntype go-import-cleaner help")
 	}
 
 	file, err := ioutil.ReadFile(argument)
