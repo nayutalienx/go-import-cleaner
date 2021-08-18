@@ -85,7 +85,32 @@ func processBracedImports(code string) string {
 		}
 	}
 
+	processedImports = deduplicateStrings(processedImports)
+
 	return strings.Replace(code, allImports, processedImports+"\n", 1)
+}
+
+type StringSet map[string]int
+
+func (m StringSet) Put(s string) {
+	m[s] = 1
+}
+
+func (m StringSet) ToString() string {
+	result := ""
+	for k, _ := range m {
+		result += k + "\n"
+	}
+	return result
+}
+
+func deduplicateStrings(lines string) string {
+	linesArray := strings.Split(lines, "\n")
+	set := StringSet{}
+	for _, l := range linesArray {
+		set.Put(l)
+	}
+	return set.ToString()
 }
 
 func help() {
