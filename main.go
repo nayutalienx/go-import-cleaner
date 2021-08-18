@@ -88,7 +88,7 @@ func processBracedImports(code string) string {
 
 	processedImports = deduplicateStrings(processedImports)
 
-	return strings.Replace(code, allImports, processedImports+"\n", 1)
+	return strings.Replace(code, allImports, processedImports, 1)
 }
 
 type StringSet map[string]int
