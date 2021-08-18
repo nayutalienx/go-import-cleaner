@@ -97,22 +97,28 @@ func (m StringSet) Put(s string) {
 	m[s] = 1
 }
 
-func (m StringSet) ToString() string {
+func ArrayToString(array []string) string {
 	result := "\n"
-	for k, _ := range m {
-		result += k + "\n"
+	for _, v := range array {
+		result += v + "\n"
 	}
 	return result
 }
 
 func deduplicateStrings(lines string) string {
 	linesArray := strings.Split(lines, "\n")
-	sort.Strings(linesArray)
 	set := StringSet{}
 	for _, l := range linesArray {
 		set.Put(l)
 	}
-	return set.ToString()
+	resultArray := make([]string, 0)
+	for k, _ := range set {
+		if k != "" {
+			resultArray = append(resultArray, k)
+		}
+	}
+	sort.Strings(resultArray)
+	return ArrayToString(resultArray)
 }
 
 func help() {
