@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -106,6 +107,7 @@ func (m StringSet) ToString() string {
 
 func deduplicateStrings(lines string) string {
 	linesArray := strings.Split(lines, "\n")
+	sort.Strings(linesArray)
 	set := StringSet{}
 	for _, l := range linesArray {
 		set.Put(l)
