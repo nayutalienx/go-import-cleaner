@@ -99,7 +99,7 @@ func (m StringSet) Put(s string) {
 func (m StringSet) ToString() string {
 	result := ""
 	for k, _ := range m {
-		result += k + "\n"
+		result += "\n" + k + "\n"
 	}
 	return result
 }
